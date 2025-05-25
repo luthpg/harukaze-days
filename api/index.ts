@@ -209,6 +209,8 @@ if (process.env.NODE_ENV === 'development') {
     fetch: app.fetch,
     port,
   });
+} else {
+  serve(app);
 }
 
-export default serve(app);
+// export default serve(app);
