@@ -8,7 +8,19 @@ import { Hono } from 'hono';
 // import { bearerAuth } from 'hono/bearer-auth'; // bearerAuth はトークンの存在と形式をチェックするが、検証は別途行う
 import { cors } from 'hono/cors';
 import { handle } from 'hono/vercel';
-import { env } from '../modules/env-server';
+import { createEnv } from '@t3-oss/env-core';
+import { z } from 'zod';
+
+const env = createEnv({
+  server: {
+    SUPABASE_URL: z.string().url().min(1),
+    SUPABASE_ANON_KEY: z.string().min(1),
+    NODE_ENV: z.string().default('development'),
+    VERCEL_URL: z.string().url().optional(),
+  },
+  runtimeEnv: process.env,
+  emptyStringAsUndefined: true,
+});
 
 // Vercel 環境変数を想定
 const supabaseUrl = env.SUPABASE_URL;
@@ -32,9 +44,9 @@ app.use(
   '*',
   cors({
     origin:
-      process.env.NODE_ENV === 'development'
+    env.NODE_ENV === 'development'
         ? '*'
-        : ['YOUR_PRODUCTION_FRONTEND_URL'], // 本番環境のURLに変更
+        : [`https://${env.VERCEL_URL}`], // 本番環境のURLに変更
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Authorization', 'Content-Type'],
   }),

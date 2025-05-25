@@ -2,7 +2,19 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/routes"
+      "destination": "/api"
+    },
+    {
+      "source": "/login",
+      "destination": "/login"
+    },
+    {
+      "source": "/app",
+      "destination": "/app"
+    },
+    {
+      "source": "/",
+      "destination": "/"
     }
   ]
 }

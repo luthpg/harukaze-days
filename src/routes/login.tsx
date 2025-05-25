@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { env } from '@/env';
 import { supabase } from '@/lib/db';
 import { isAuthenticatedAtom } from '@/stores/auth';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
@@ -27,16 +28,11 @@ function RouteComponent() {
     }
   }, [isAuthenticated, navigate]);
 
-  const appUrl =
-    process.env.VERCEL_URL !== null
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000';
-
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${appUrl}/app`, // 認証後 /app にリダイレクト
+        redirectTo: `${env.VITE_APP_URL}/app`, // 認証後 /app にリダイレクト
       },
     });
     if (error) {

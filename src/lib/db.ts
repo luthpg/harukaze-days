@@ -1,4 +1,4 @@
-import { env } from '@/env-client';
+import { env } from '@/env';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = env.VITE_SUPABASE_URL;
