@@ -1,4 +1,4 @@
+import type { AppType } from '@/../api/routes/index';
 import { hc } from 'hono/client';
-import type { AppType } from '~/harukaze-api/api';
 
-export const honoClient = hc<AppType>('/');
+export const honoClient = hc<AppType>('http://localhost:3001/api');

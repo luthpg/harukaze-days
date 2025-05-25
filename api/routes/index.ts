@@ -1,13 +1,13 @@
+import { serve } from '@hono/node-server';
 import {
   type SupabaseClient,
   type User,
   createClient,
 } from '@supabase/supabase-js';
 import { Hono } from 'hono';
-import { bearerAuth } from 'hono/bearer-auth'; // bearerAuth はトークンの存在と形式をチェックするが、検証は別途行う
+// import { bearerAuth } from 'hono/bearer-auth'; // bearerAuth はトークンの存在と形式をチェックするが、検証は別途行う
 import { cors } from 'hono/cors';
 import { handle } from 'hono/vercel';
-import { serve } from '@hono/node-server';
 import { env } from '../modules/env-server';
 
 // Vercel 環境変数を想定
@@ -40,7 +40,7 @@ app.use(
   }),
 );
 
-app.use('/', async (c) => {
+const rootRoute = app.use('/', async (c) => {
   return c.text('ok');
 });
 
@@ -83,7 +83,7 @@ app.use('/auth/*', async (c, next) => {
 
 // --- API Routes ---
 // GET /api/auth/dates - 記録された日付を取得
-app.get('/auth/dates', async (c) => {
+const getDatesRoute = app.get('/auth/dates', async (c) => {
   const supabase = c.get('supabaseClient'); // ミドルウェアでセットされたクライアント
   // const user = c.get('user'); // 必要であればユーザー情報も取得可能
 
@@ -103,7 +103,7 @@ app.get('/auth/dates', async (c) => {
 });
 
 // POST /api/auth/dates - 新しい日付を記録
-app.post('/auth/dates', async (c) => {
+const postDatesRoute = app.post('/auth/dates', async (c) => {
   const supabase = c.get('supabaseClient');
   const user = c.get('user'); // user_id を明示的にセットする場合に取得
   const { date, note } = await c.req.json();
@@ -130,7 +130,7 @@ app.post('/auth/dates', async (c) => {
 });
 
 // PUT /api/auth/dates/:id - 日付情報を更新 (主に備考)
-app.put('/auth/dates/:id', async (c) => {
+const putDatesRoute = app.put('/auth/dates/:id', async (c) => {
   const supabase = c.get('supabaseClient');
   // const user = c.get('user'); // RLSのため user_id を eq に含める必要は理論上ない
   const id = c.req.param('id');
@@ -161,7 +161,7 @@ app.put('/auth/dates/:id', async (c) => {
 });
 
 // DELETE /api/auth/dates/:id - 日付を削除
-app.delete('/auth/dates/:id', async (c) => {
+const deleteDatesRoute = app.delete('/auth/dates/:id', async (c) => {
   const supabase = c.get('supabaseClient');
   // const user = c.get('user'); // RLSのため user_id を eq に含める必要は理論上ない
   const id = c.req.param('id');
@@ -183,6 +183,13 @@ app.delete('/auth/dates/:id', async (c) => {
   }
   return c.json({ message: 'Date record deleted successfully' }, 200);
 });
+
+export type AppType =
+  | typeof rootRoute
+  | typeof getDatesRoute
+  | typeof postDatesRoute
+  | typeof putDatesRoute
+  | typeof deleteDatesRoute;
 
 const port = 3001;
 if (process.env.NODE_ENV === 'development') {

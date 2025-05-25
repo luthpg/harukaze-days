@@ -7,7 +7,7 @@ const getAuthHeaders = async () => {
   } = await supabase.auth.getSession();
   if (!session) throw new Error('User not authenticated');
   return {
-    Authorization: `Bearer ${session.accessToken}`,
+    Authorization: `Bearer ${session.access_token}`,
     'Content-Type': 'application/json',
   };
 };

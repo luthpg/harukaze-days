@@ -1,7 +1,12 @@
-import { Link, useRouterState } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Home, CalendarDays, Settings, Palette } from 'lucide-react';
+import { Link, useRouterState } from '@tanstack/react-router';
+import {
+  // Home,
+  CalendarDays,
+  // Settings,
+  // Palette
+} from 'lucide-react';
 
 interface NavItem {
   to: string;

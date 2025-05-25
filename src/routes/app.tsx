@@ -1,23 +1,22 @@
-import { MinimalSidebar as Sidebar } from '@/components/Sidebar';
+import { SidebarNavContent } from '@/components/sidebar-contents';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { supabase } from '@/lib/db';
 import { isAuthenticatedAtom, userAtom } from '@/stores/auth';
-import { Link, Outlet, createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
 import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetClose,
-} from '@/components/ui/sheet';
-import { Menu, CalendarDays } from 'lucide-react';
-import { SidebarNavContent } from '@/components/sidebar-contents';
+  Link,
+  Outlet,
+  createFileRoute,
+  useNavigate,
+} from '@tanstack/react-router';
+import { useAtomValue } from 'jotai';
+import { Menu } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export const Route = createFileRoute('/app')({
-  beforeLoad: ({ context, location }) => {
-    // ... 既存の認証チェック
-  },
+  // beforeLoad: ({ context, location }) => {
+  //   // ... 既存の認証チェック
+  // },
   component: AppPageLayout,
 });
 
@@ -68,8 +67,13 @@ function AppPageLayout() {
 
       {/* Mobile Sidebar (Sheet) (md未満でトリガー表示) */}
       <Sheet open={isMobileSheetOpen} onOpenChange={setIsMobileSheetOpen}>
+        <SheetTitle>App menu</SheetTitle>
         {/* SheetTrigger は AppHeader 内に配置 */}
-        <SheetContent side="left" className="p-0 w-72 bg-background">
+        <SheetContent
+          side="left"
+          className="p-0 w-72 bg-background"
+          aria-describedby={undefined}
+        >
           {' '}
           {/* パディングをリセットし、SheetContent内で管理 */}
           <SidebarNavContent onLinkClick={handleLinkClick} />
