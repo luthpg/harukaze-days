@@ -6,7 +6,7 @@
       "destination": "/api"
     },
     {
-      "source": "/[^.]+",
+      "source": "/(([^.])+)",
       "destination": "/",
       "statusCode": 200
     }
