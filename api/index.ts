@@ -207,10 +207,7 @@ if (process.env.NODE_ENV === 'development') {
   console.log(`Server is running on http://localhost:${port}`);
   port = 3001;
 }
-const handler = serve(app, {
-  // fetch: app.fetch,
-  port,
-});
+const handler = serve(app);
 
 export const GET = handler;
 export const POST = handler;
