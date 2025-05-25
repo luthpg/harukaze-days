@@ -208,7 +208,7 @@ if (process.env.NODE_ENV === 'development') {
   port = 3001;
 }
 const handler = serve(app, {
-  fetch: app.fetch,
+  // fetch: app.fetch,
   port,
 });
 
