@@ -37,7 +37,9 @@ function RouteComponent() {
     });
     if (error) {
       console.error('Google login error:', error.message);
-      toast.error(error.message);
+      toast.error('エラー', {
+        description: error.message,
+      });
     }
   };
 
@@ -45,7 +47,9 @@ function RouteComponent() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">ログイン</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            はるかぜ にログイン
+          </CardTitle>
           <CardDescription>
             Googleアカウントでログインしてください。
           </CardDescription>

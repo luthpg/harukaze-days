@@ -7,6 +7,7 @@ import {
   // Settings,
   // Palette
 } from 'lucide-react';
+import { ModeToggle } from './mode-toggle';
 
 interface NavItem {
   to: string;
@@ -37,8 +38,7 @@ export function SidebarNavContent({ onLinkClick }: SidebarNavContentProps) {
         {/* ヘッダー部分を少し調整 */}
         <Link to="/" className="flex items-center gap-2" onClick={onLinkClick}>
           <CalendarDays className="h-8 w-8 text-primary" />{' '}
-          {/* 仮のロゴアイコン */}
-          <h1 className="text-xl font-bold text-primary">Date Logger</h1>
+          <h1 className="text-xl font-bold text-primary">はるかぜ</h1>
         </Link>
       </div>
       <nav className="flex flex-col gap-1 px-4 py-2 flex-1">
@@ -64,9 +64,12 @@ export function SidebarNavContent({ onLinkClick }: SidebarNavContentProps) {
           </Button>
         ))}
       </nav>
+      <div className="mx-auto py-3">
+        <ModeToggle />
+      </div>
       <div className="mt-auto p-4 border-t">
         <p className="text-xs text-muted-foreground text-center">
-          © {new Date().getFullYear()}
+          © {new Date().getFullYear()} はるかぜ
         </p>
       </div>
     </div>

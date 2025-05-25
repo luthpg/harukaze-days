@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 3000",
+    "dev:api": "jiti api/index.ts",
     "start": "vite --port 3000",
     "build": "vite build && tsc",
     "serve": "vite preview",
@@ -30,6 +31,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^16.5.0",
     "hono": "^4.7.10",
     "jotai": "^2.12.4",
     "lucide-react": "^0.476.0",

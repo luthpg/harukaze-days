@@ -13,10 +13,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { dateService } from '@/services/api';
-import { editingDateRecordAtom, recordedDatesAtom } from '@/stores/dates';
+import {
+  averageIntervalDaysAtom,
+  editingDateRecordAtom,
+  recordedDatesAtom,
+} from '@/stores/dates';
 import type { DateRecord } from '@/types';
 import { format, isSameDay, parseISO, startOfDay } from 'date-fns';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -26,6 +30,7 @@ export default function CalendarView() {
     new Date(),
   );
   const [recordedDates, setRecordedDates] = useAtom(recordedDatesAtom);
+  const averageInterval = useAtomValue(averageIntervalDaysAtom);
   const [editingRecord, setEditingRecord] = useAtom(editingDateRecordAtom);
   const [note, setNote] = useState('');
   const [isConfirmDeleteDialogOpen, setIsConfirmDeleteDialogOpen] =
@@ -72,6 +77,7 @@ export default function CalendarView() {
         toast.success('成功', {
           description: `${format(dateOnly, 'yyyy/MM/dd')} を記録しました。`,
         });
+        setSelectedCalDate(undefined);
       } catch (error) {
         toast.error('エラー', {
           description: (error as Error).message,
@@ -93,6 +99,7 @@ export default function CalendarView() {
       toast.success('成功', { description: '備考を更新しました。' });
       setIsEditModalOpen(false);
       setEditingRecord(null);
+      setSelectedCalDate(undefined);
     } catch (error) {
       toast.error('エラー', {
         description: (error as Error).message,
@@ -118,6 +125,7 @@ export default function CalendarView() {
         setIsEditModalOpen(false);
         setEditingRecord(null);
       }
+      setSelectedCalDate(undefined);
     } catch (error) {
       toast.error('エラー', {
         description: (error as Error).message,
@@ -144,39 +152,56 @@ export default function CalendarView() {
               recorded: (date) =>
                 recordedDatesSet.has(format(date, 'yyyy-MM-dd')),
             }}
-            modifiersStyles={{
-              recorded: {
-                fontWeight: 'bold',
-                // Tailwind CSS class for visual emphasis (e.g., bg-primary/20, ring-2 ring-primary)
-                // Shadcn Calendarのday_selectedのスタイルを参考にカスタム
-                border: '2px solid hsl(var(--primary))',
-                backgroundColor: 'hsl(var(--primary) / 0.1)',
-                color: 'hsl(var(--primary))',
-                textDecoration: 'underline',
+            modifiersClassNames={{
+              // 記録済みの日付に適用するTailwind CSSクラス
+              recorded:
+                'bg-primary/10 text-primary font-semibold relative rounded-md',
+              selected: 'bg-primary text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-md', // Shadcnデフォルトのselectedスタイルと競合しないように注意
+              today: 'text-accent-foreground bg-accent/50 rounded-md', // 今日の日付のスタイル（任意）
+            }}
+            components={{
+              DayContent: (props) => {
+                // props.date を Date オブジェクトとして扱う
+                // props.displayMonth は現在のカレンダーが表示している月
+                const dayOfMonth = props.date.getDate();
+                const isRecordedDate = recordedDatesSet.has(
+                  format(props.date, 'yyyy-MM-dd'),
+                );
+
+                return (
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    {dayOfMonth}
+                    {isRecordedDate && (
+                      <span
+                        className="absolute w-[5px] h-[5px] bg-primary rounded-full"
+                        style={{
+                          top: '10%',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                        }}
+                        aria-hidden="true"
+                      />
+                    )}
+                  </div>
+                );
               },
             }}
-            // components={{
-            //   // 記録済みの日付にドットを表示する例 (modifiersClassnames で対応する方が Shadcn/UI らしい)
-            //   DayContent: (props) => {
-            //     const isRecorded = recordedDatesSet.has(
-            //       format(props.date, 'yyyy-MM-dd'),
-            //     );
-            //     return (
-            //       <div className="relative">
-            //         {props.date.getDate()}
-            //         {isRecorded && (
-            //           <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full"></div>
-            //         )}
-            //       </div>
-            //     );
-            //   },
-            // }}
           />
         </CardContent>
       </Card>
 
       <div className="flex-1">
-        <h2 className="text-xl font-semibold mb-4">記録済みの日付</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">記録済みの日付</h2>
+          {/* 平均間隔の表示 */}
+          <div className="text-sm text-muted-foreground">
+            平均記録間隔:
+            <span className="font-semibold text-foreground ml-1">
+              {averageInterval !== null ? `${averageInterval} 日` : 'ー 日'}
+            </span>
+          </div>
+        </div>
+
         {recordedDates.length === 0 ? (
           <p className="text-muted-foreground">記録された日付はありません。</p>
         ) : (

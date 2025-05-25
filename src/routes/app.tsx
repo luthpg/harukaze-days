@@ -67,14 +67,14 @@ function AppPageLayout() {
 
       {/* Mobile Sidebar (Sheet) (md未満でトリガー表示) */}
       <Sheet open={isMobileSheetOpen} onOpenChange={setIsMobileSheetOpen}>
-        <SheetTitle>App menu</SheetTitle>
-        {/* SheetTrigger は AppHeader 内に配置 */}
         <SheetContent
+          title="test"
           side="left"
           className="p-0 w-72 bg-background"
           aria-describedby={undefined}
         >
-          {' '}
+          {/* アクセシビリティのためのタイトル (視覚的には非表示) */}
+          <SheetTitle className="sr-only">メインナビゲーション</SheetTitle>{' '}
           {/* パディングをリセットし、SheetContent内で管理 */}
           <SidebarNavContent onLinkClick={handleLinkClick} />
         </SheetContent>

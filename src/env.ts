@@ -17,6 +17,7 @@ export const env = createEnv({
     VITE_SUPABASE_URL: z.string().url(),
     VITE_SUPABASE_ANON_KEY: z.string().min(1),
     VITE_APP_URL: z.string().url(),
+    VITE_SERVER_URL: z.string().url(),
     // VITE_SENTRY_DSN: z.string().url().optional(), // Sentry設定時
   },
 

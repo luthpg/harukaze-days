@@ -1,3 +1,4 @@
+import { env } from '@/env';
 import { supabase } from '@/lib/db';
 import type { DateRecord } from '@/types';
 
@@ -12,7 +13,7 @@ const getAuthHeaders = async () => {
   };
 };
 
-const API_BASE_URL = '/api/auth';
+const API_BASE_URL = `${env.VITE_SERVER_URL}/api/auth`;
 
 export const dateService = {
   getDates: async (): Promise<DateRecord[]> => {
