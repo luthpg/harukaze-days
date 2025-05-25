@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom/client';
 import '@/styles.css';
 import { Toaster } from '@/components/ui/sonner.tsx';
 import reportWebVitals from '@/reportWebVitals.ts';
+import '@/env';
 
 // Create a new router instance
 const router = createRouter({

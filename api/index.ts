@@ -4,11 +4,11 @@ import {
   type User,
   createClient,
 } from '@supabase/supabase-js';
+import { createEnv } from '@t3-oss/env-core';
 import { Hono } from 'hono';
 // import { bearerAuth } from 'hono/bearer-auth'; // bearerAuth はトークンの存在と形式をチェックするが、検証は別途行う
 import { cors } from 'hono/cors';
 import { handle } from 'hono/vercel';
-import { createEnv } from '@t3-oss/env-core';
 import { z } from 'zod';
 
 const env = createEnv({
@@ -44,9 +44,7 @@ app.use(
   '*',
   cors({
     origin:
-    env.NODE_ENV === 'development'
-        ? '*'
-        : [`https://${env.VERCEL_URL}`], // 本番環境のURLに変更
+      env.NODE_ENV === 'development' ? '*' : [`https://${env.VERCEL_URL}`], // 本番環境のURLに変更
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Authorization', 'Content-Type'],
   }),
