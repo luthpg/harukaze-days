@@ -8,7 +8,7 @@ import { createEnv } from '@t3-oss/env-core';
 import { Hono } from 'hono';
 // import { bearerAuth } from 'hono/bearer-auth'; // bearerAuth はトークンの存在と形式をチェックするが、検証は別途行う
 import { cors } from 'hono/cors';
-import { handle } from 'hono/vercel';
+// import { handle } from 'hono/vercel';
 import { z } from 'zod';
 import 'dotenv/config';
 
@@ -211,4 +211,4 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
-export default handle(app);
+export default serve(app);
