@@ -202,15 +202,19 @@ export type AppType =
   | typeof putDatesRoute
   | typeof deleteDatesRoute;
 
-const port = 3001;
+let port: Number | undefined;
 if (process.env.NODE_ENV === 'development') {
   console.log(`Server is running on http://localhost:${port}`);
-  serve({
-    fetch: app.fetch,
-    port,
-  });
-} else {
-  serve(app);
+  port = 3001;
 }
+const handler = serve(app, {
+  fetch: app.fetch,
+  port,
+});
 
-// export default serve(app);
+export const GET = handler;
+export const POST = handler;
+export const PATCH = handler;
+export const PUT = handler;
+export const OPTIONS = handler;
+export default handler;
