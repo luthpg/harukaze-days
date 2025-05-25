@@ -27,11 +27,16 @@ function RouteComponent() {
     }
   }, [isAuthenticated, navigate]);
 
+  const appUrl =
+    process.env.VERCEL_URL !== null
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3000';
+
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/app`, // 認証後 /app にリダイレクト
+        redirectTo: `${appUrl}/app`, // 認証後 /app にリダイレクト
       },
     });
     if (error) {
