@@ -1,4 +1,4 @@
-import { serve } from '@hono/node-server';
+// import { serve } from '@hono/node-server';
 import {
   type SupabaseClient,
   type User,
@@ -8,7 +8,7 @@ import { createEnv } from '@t3-oss/env-core';
 import { Hono } from 'hono';
 // import { bearerAuth } from 'hono/bearer-auth'; // bearerAuth はトークンの存在と形式をチェックするが、検証は別途行う
 import { cors } from 'hono/cors';
-// import { handle } from 'hono/vercel';
+import { handle } from 'hono/vercel';
 import { z } from 'zod';
 import 'dotenv/config';
 
@@ -202,12 +202,12 @@ export type AppType =
   | typeof putDatesRoute
   | typeof deleteDatesRoute;
 
-let port: Number | undefined;
+let port: number | undefined;
 if (process.env.NODE_ENV === 'development') {
   console.log(`Server is running on http://localhost:${port}`);
   port = 3001;
 }
-const handler = serve(app);
+const handler = handle(app);
 
 export const GET = handler;
 export const POST = handler;
