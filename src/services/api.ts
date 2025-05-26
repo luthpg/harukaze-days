@@ -18,7 +18,10 @@ const API_BASE_URL = `${env.VITE_SERVER_URL}/api/auth`;
 export const dateService = {
   getDates: async (): Promise<DateRecord[]> => {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/dates`, { headers });
+    const response = await fetch(`${API_BASE_URL}/dates`, {
+      mode: 'cors',
+      headers,
+    });
     if (!response.ok) {
       const errorData = await response
         .json()
@@ -33,6 +36,7 @@ export const dateService = {
     const response = await fetch(`${API_BASE_URL}/dates`, {
       method: 'POST',
       headers,
+      mode: 'cors',
       body: JSON.stringify({ date, note }),
     });
     if (!response.ok) {
@@ -51,6 +55,7 @@ export const dateService = {
     const headers = await getAuthHeaders();
     const response = await fetch(`${API_BASE_URL}/dates/${id}`, {
       method: 'PUT',
+      mode: 'cors',
       headers,
       body: JSON.stringify(data),
     });
@@ -67,6 +72,7 @@ export const dateService = {
     const headers = await getAuthHeaders();
     const response = await fetch(`${API_BASE_URL}/dates/${id}`, {
       method: 'DELETE',
+      mode: 'cors',
       headers,
     });
     if (!response.ok) {
