@@ -3,10 +3,11 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api"
+      "destination": "/api",
+      "statusCode": 200
     },
     {
-      "source": "/:path*",
+      "source": "/(?!api):path*",
       "destination": "/",
       "statusCode": 200
     }
