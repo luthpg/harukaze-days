@@ -2,14 +2,24 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api",
-      "statusCode": 200
+      "source": "/login",
+      "destination": "/"
     },
     {
-      "source": "/(?!api):path*",
-      "destination": "/",
-      "statusCode": 200
+      "source": "/app",
+      "destination": "/"
+    },
+    {
+      "source": "/app/:path",
+      "destination": "/"
+    },
+    {
+      "source": "/api",
+      "destination": "/api"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/api"
     }
   ]
 }

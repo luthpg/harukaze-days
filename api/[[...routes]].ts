@@ -20,7 +20,7 @@ const env = createEnv({
   },
   clientPrefix: 'VITE_',
   client: {
-    VITE_SERVER_URL: z.string().url().optional(),
+    VITE_APP_URL: z.string().url().optional(),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
@@ -48,7 +48,7 @@ app.use(
   '*',
   cors({
     origin:
-      env.NODE_ENV === 'development' ? '*' : [`https://${env.VITE_SERVER_URL}`], // 本番環境のURLに変更
+      env.NODE_ENV === 'development' ? '*' : [`https://${env.VITE_APP_URL}`], // 本番環境のURLに変更
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Authorization', 'Content-Type'],
   }),
