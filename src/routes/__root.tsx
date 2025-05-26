@@ -1,7 +1,7 @@
 import { env } from '@/env';
 import { supabase } from '@/lib/db';
 import { sessionAtom } from '@/stores/auth';
-import { Outlet, createRootRoute } from '@tanstack/react-router';
+import { HeadContent, Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
@@ -89,6 +89,7 @@ export const Route = createRootRoute({
 
     return (
       <>
+        <HeadContent />
         <Outlet />
         <TanStackRouterDevtools />
       </>
