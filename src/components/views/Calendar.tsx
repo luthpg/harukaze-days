@@ -156,7 +156,8 @@ export default function CalendarView() {
               // 記録済みの日付に適用するTailwind CSSクラス
               recorded:
                 'bg-primary/10 text-primary font-semibold relative rounded-md',
-              selected: 'bg-primary text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-md', // Shadcnデフォルトのselectedスタイルと競合しないように注意
+              selected:
+                'bg-primary text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-md', // Shadcnデフォルトのselectedスタイルと競合しないように注意
               today: 'text-accent-foreground bg-accent/50 rounded-md', // 今日の日付のスタイル（任意）
             }}
             components={{
