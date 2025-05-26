@@ -1,4 +1,4 @@
-// import { serve } from '@hono/node-server';
+import { serve } from '@hono/node-server';
 import {
   type SupabaseClient,
   type User,
@@ -17,7 +17,10 @@ const env = createEnv({
     SUPABASE_URL: z.string().url().min(1),
     SUPABASE_ANON_KEY: z.string().min(1),
     NODE_ENV: z.string().default('development'),
-    VERCEL_URL: z.string().url().optional(),
+  },
+  clientPrefix: 'VITE_',
+  client: {
+    VITE_SERVER_URL: z.string().url().optional(),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
@@ -45,7 +48,7 @@ app.use(
   '*',
   cors({
     origin:
-      env.NODE_ENV === 'development' ? '*' : [`https://${env.VERCEL_URL}`], // 本番環境のURLに変更
+      env.NODE_ENV === 'development' ? '*' : [`https://${env.VITE_SERVER_URL}`], // 本番環境のURLに変更
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Authorization', 'Content-Type'],
   }),
@@ -202,10 +205,13 @@ export type AppType =
   | typeof putDatesRoute
   | typeof deleteDatesRoute;
 
-let port: number | undefined;
+const port = 3001;
 if (process.env.NODE_ENV === 'development') {
   console.log(`Server is running on http://localhost:${port}`);
-  port = 3001;
+  serve({
+    fetch: app.fetch,
+    port,
+  });
 }
 const handler = handle(app);
 

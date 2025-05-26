@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 3000",
-    "dev:api": "jiti api/index.ts",
+    "dev:api": "jiti api/[[...routes]].ts",
     "start": "vite --port 3000",
     "build": "vite build && tsc",
     "serve": "vite preview",
