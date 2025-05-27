@@ -37,16 +37,25 @@ export default function CalendarView() {
     useState(false);
   const [dateToDelete, setDateToDelete] = useState<DateRecord | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const withLoading = async (fn: () => void | Promise<void>) => {
+    setIsLoading(true);
+    await fn();
+    setIsLoading(false);
+  };
 
   const fetchDates = async () => {
-    try {
-      const dates = await dateService.getDates();
-      setRecordedDates(dates);
-    } catch (error) {
-      toast.error('エラー', {
-        description: (error as Error).message,
-      });
-    }
+    await withLoading(async () => {
+      try {
+        const dates = await dateService.getDates();
+        setRecordedDates(dates);
+      } catch (error) {
+        toast.error('エラー', {
+          description: (error as Error).message,
+        });
+      }
+    });
   };
 
   useEffect(() => {
@@ -54,57 +63,62 @@ export default function CalendarView() {
   }, []);
 
   const handleDateSelect = async (date: Date | undefined) => {
-    if (!date) return;
-    setSelectedCalDate(date);
-    const dateOnly = startOfDay(date); // 時間情報を除去
+    if (!date || isLoading) return;
 
-    const existingRecord = recordedDates.find((r) =>
-      isSameDay(parseISO(r.date), dateOnly),
-    );
+    await withLoading(async () => {
+      setSelectedCalDate(date);
+      const dateOnly = startOfDay(date); // 時間情報を除去
 
-    if (existingRecord) {
-      // 既に記録済みの日付をクリックした場合 -> 編集ダイアログを開くか、削除確認
-      setEditingRecord(existingRecord);
-      setNote(existingRecord.note || '');
-      setIsEditModalOpen(true);
-    } else {
-      // 未記録の日付をクリックした場合 -> ワンクリック登録
+      const existingRecord = recordedDates.find((r) =>
+        isSameDay(parseISO(r.date), dateOnly),
+      );
+
+      if (existingRecord) {
+        // 既に記録済みの日付をクリックした場合 -> 編集ダイアログを開くか、削除確認
+        setEditingRecord(existingRecord);
+        setNote(existingRecord.note || '');
+        setIsEditModalOpen(true);
+      } else {
+        // 未記録の日付をクリックした場合 -> ワンクリック登録
+        try {
+          const newRecord = await dateService.addDate(
+            format(dateOnly, 'yyyy-MM-dd'),
+          );
+          setRecordedDates((prev) => [...prev, newRecord]);
+          toast.success('成功', {
+            description: `${format(dateOnly, 'yyyy/MM/dd')} を記録しました。`,
+          });
+          setSelectedCalDate(undefined);
+        } catch (error) {
+          toast.error('エラー', {
+            description: (error as Error).message,
+          });
+        }
+      }
+    });
+  };
+
+  const handleSaveNote = async () => {
+    if (!editingRecord) return;
+    await withLoading(async () => {
       try {
-        const newRecord = await dateService.addDate(
-          format(dateOnly, 'yyyy-MM-dd'),
-        );
-        setRecordedDates((prev) => [...prev, newRecord]);
-        toast.success('成功', {
-          description: `${format(dateOnly, 'yyyy/MM/dd')} を記録しました。`,
+        const updatedRecord = await dateService.updateDate(editingRecord.id, {
+          note,
+          date: editingRecord.date,
         });
+        setRecordedDates((prev) =>
+          prev.map((r) => (r.id === updatedRecord.id ? updatedRecord : r)),
+        );
+        toast.success('成功', { description: '備考を更新しました。' });
+        setIsEditModalOpen(false);
+        setEditingRecord(null);
         setSelectedCalDate(undefined);
       } catch (error) {
         toast.error('エラー', {
           description: (error as Error).message,
         });
       }
-    }
-  };
-
-  const handleSaveNote = async () => {
-    if (!editingRecord) return;
-    try {
-      const updatedRecord = await dateService.updateDate(editingRecord.id, {
-        note,
-        date: editingRecord.date,
-      });
-      setRecordedDates((prev) =>
-        prev.map((r) => (r.id === updatedRecord.id ? updatedRecord : r)),
-      );
-      toast.success('成功', { description: '備考を更新しました。' });
-      setIsEditModalOpen(false);
-      setEditingRecord(null);
-      setSelectedCalDate(undefined);
-    } catch (error) {
-      toast.error('エラー', {
-        description: (error as Error).message,
-      });
-    }
+    });
   };
 
   const openDeleteConfirmDialog = (record: DateRecord) => {
@@ -114,23 +128,27 @@ export default function CalendarView() {
 
   const handleDeleteDate = async () => {
     if (!dateToDelete) return;
-    try {
-      await dateService.deleteDate(dateToDelete.id);
-      setRecordedDates((prev) => prev.filter((r) => r.id !== dateToDelete.id));
-      toast.success('成功', { description: '記録を削除しました。' });
-      setIsConfirmDeleteDialogOpen(false);
-      setDateToDelete(null);
-      if (editingRecord?.id === dateToDelete.id) {
-        // 編集中のものが削除されたら編集モーダルも閉じる
-        setIsEditModalOpen(false);
-        setEditingRecord(null);
+    await withLoading(async () => {
+      try {
+        await dateService.deleteDate(dateToDelete.id);
+        setRecordedDates((prev) =>
+          prev.filter((r) => r.id !== dateToDelete.id),
+        );
+        toast.success('成功', { description: '記録を削除しました。' });
+        setIsConfirmDeleteDialogOpen(false);
+        setDateToDelete(null);
+        if (editingRecord?.id === dateToDelete.id) {
+          // 編集中のものが削除されたら編集モーダルも閉じる
+          setIsEditModalOpen(false);
+          setEditingRecord(null);
+        }
+        setSelectedCalDate(undefined);
+      } catch (error) {
+        toast.error('エラー', {
+          description: (error as Error).message,
+        });
       }
-      setSelectedCalDate(undefined);
-    } catch (error) {
-      toast.error('エラー', {
-        description: (error as Error).message,
-      });
-    }
+    });
   };
 
   const recordedDatesSet = new Set(
@@ -229,6 +247,7 @@ export default function CalendarView() {
                   </div>
                   <div className="space-x-2">
                     <Button
+                      disabled={isLoading}
                       variant="outline"
                       size="sm"
                       onClick={() => {
@@ -240,6 +259,7 @@ export default function CalendarView() {
                       編集
                     </Button>
                     <Button
+                      disabled={isLoading}
                       variant="destructive"
                       size="sm"
                       onClick={() => openDeleteConfirmDialog(record)}
@@ -295,7 +315,11 @@ export default function CalendarView() {
                   キャンセル
                 </Button>
               </DialogClose>
-              <Button type="button" onClick={handleSaveNote}>
+              <Button
+                disabled={isLoading}
+                type="button"
+                onClick={handleSaveNote}
+              >
                 保存
               </Button>
             </div>

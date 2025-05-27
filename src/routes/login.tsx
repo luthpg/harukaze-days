@@ -11,7 +11,8 @@ import { supabase } from '@/lib/db';
 import { isAuthenticatedAtom } from '@/stores/auth';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useAtomValue } from 'jotai';
-import { useEffect } from 'react';
+import { LucideLoader } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export const Route = createFileRoute('/login')({
@@ -21,6 +22,7 @@ export const Route = createFileRoute('/login')({
 function RouteComponent() {
   const navigate = useNavigate({ from: Route.fullPath });
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -28,19 +30,27 @@ function RouteComponent() {
     }
   }, [isAuthenticated, navigate]);
 
+  const withLoading = async (fn: () => void | Promise<void>) => {
+    setIsLoading(true);
+    await fn();
+    setIsLoading(false);
+  };
+
   const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${env.VITE_APP_URL}/app`, // 認証後 /app にリダイレクト
-      },
-    });
-    if (error) {
-      console.error('Google login error:', error.message);
-      toast.error('エラー', {
-        description: error.message,
+    await withLoading(async () => {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${env.VITE_APP_URL}/app`, // 認証後 /app にリダイレクト
+        },
       });
-    }
+      if (error) {
+        console.error('Google login error:', error.message);
+        toast.error('エラー', {
+          description: error.message,
+        });
+      }
+    });
   };
 
   return (
@@ -56,10 +66,15 @@ function RouteComponent() {
         </CardHeader>
         <CardContent>
           <Button
+            disabled={isLoading}
             onClick={handleGoogleLogin}
             className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
           >
-            Googleでログイン
+            {isLoading ? (
+              <LucideLoader className="animate-spin" />
+            ) : (
+              'Googleでログイン'
+            )}
           </Button>
         </CardContent>
       </Card>
