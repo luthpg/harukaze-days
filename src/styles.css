@@ -18,6 +18,14 @@ code {
     monospace;
 }
 
+/* top page styles */
+:root {
+  --background-border: oklch(0.92 0.004 286.32);
+}
+.dark {
+  --background-border: oklch(0.274 0.006 286.033);
+}
+
 :root {
   --radius: 0.5rem;
   --background: oklch(1 0 0);

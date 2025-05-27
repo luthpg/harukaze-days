@@ -53,11 +53,11 @@ export const Route = createRootRoute({
       },
       {
         name: 'twitter:image',
-        content: `${env.VITE_APP_URL}/logo192.png`,
+        content: `${env.VITE_APP_URL}/logo.png`,
       },
       {
         property: 'og:image',
-        content: `${env.VITE_APP_URL}/logo192.png`,
+        content: `${env.VITE_APP_URL}/logo.png`,
       },
       {
         property: 'og:title',
@@ -83,11 +83,11 @@ export const Route = createRootRoute({
     links: [
       {
         rel: 'icon',
-        href: '/favicon.ico'
+        href: '/favicon.ico',
       },
       {
         rel: 'apple-touch-icon',
-        href: '/logo192.png',
+        href: '/apple-touch-icon.png',
       },
       {
         rel: 'manifest',
