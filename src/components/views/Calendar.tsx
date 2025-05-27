@@ -301,6 +301,7 @@ export default function CalendarView() {
           </div>
           <DialogFooter className="sm:justify-between">
             <Button
+              disabled={isLoading}
               type="button"
               variant="destructive"
               onClick={() =>
@@ -349,6 +350,7 @@ export default function CalendarView() {
               </Button>
             </DialogClose>
             <Button
+              disabled={isLoading}
               type="button"
               variant="destructive"
               onClick={handleDeleteDate}
