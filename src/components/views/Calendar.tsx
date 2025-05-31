@@ -1,5 +1,5 @@
+import { Calendar } from '@/components/cutom/calendar';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Dialog,
@@ -21,6 +21,7 @@ import {
 import type { DateRecord } from '@/types';
 import { format, isSameDay, parseISO, startOfDay } from 'date-fns';
 import { useAtom, useAtomValue } from 'jotai';
+import { CalendarDays } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -88,7 +89,7 @@ export default function CalendarView() {
           toast.success('成功', {
             description: `${format(dateOnly, 'yyyy/MM/dd')} を記録しました。`,
           });
-          setSelectedCalDate(undefined);
+          setSelectedCalDate(new Date());
         } catch (error) {
           toast.error('エラー', {
             description: (error as Error).message,
@@ -112,7 +113,7 @@ export default function CalendarView() {
         toast.success('成功', { description: '備考を更新しました。' });
         setIsEditModalOpen(false);
         setEditingRecord(null);
-        setSelectedCalDate(undefined);
+        setSelectedCalDate(new Date());
       } catch (error) {
         toast.error('エラー', {
           description: (error as Error).message,
@@ -142,13 +143,18 @@ export default function CalendarView() {
           setIsEditModalOpen(false);
           setEditingRecord(null);
         }
-        setSelectedCalDate(undefined);
+        setSelectedCalDate(new Date());
       } catch (error) {
         toast.error('エラー', {
           description: (error as Error).message,
         });
       }
     });
+  };
+
+  const handleTodayButton = () => {
+    setCurrentMonth(new Date());
+    setSelectedCalDate(new Date());
   };
 
   const recordedDatesSet = new Set(
@@ -206,6 +212,14 @@ export default function CalendarView() {
               },
             }}
           />
+          <Button
+            onClick={handleTodayButton}
+            variant="secondary"
+            className="w-full mt-2"
+          >
+            <CalendarDays />
+            今日に移動
+          </Button>
         </CardContent>
       </Card>
 

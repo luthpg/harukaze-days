@@ -1,10 +1,8 @@
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
-import { ja } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type * as React from 'react';
-import { type DateFormatter, DayPicker } from 'react-day-picker';
+import { DayPicker } from 'react-day-picker';
 
 function Calendar({
   className,
@@ -12,16 +10,8 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: React.ComponentProps<typeof DayPicker>) {
-  const formatCaption: DateFormatter = (date, options) => {
-    const y = format(date, 'yyyy');
-    const m = format(date, 'MM', { locale: options?.locale });
-    return `${y}年${m}月`;
-  };
-
   return (
     <DayPicker
-      locale={ja}
-      formatters={{ formatCaption }}
       showOutsideDays={showOutsideDays}
       className={cn('p-3', className)}
       classNames={{
