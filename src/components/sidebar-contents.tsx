@@ -17,10 +17,6 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { to: '/app', label: 'カレンダー', icon: CalendarDays },
-  // 将来的な拡張例
-  // { to: '/app/dashboard', label: 'ダッシュボード', icon: Home },
-  // { to: '/app/settings', label: '設定', icon: Settings },
-  // { to: '/app/theme', label: 'テーマ設定', icon: Palette },
 ];
 
 interface SidebarNavContentProps {
@@ -35,7 +31,6 @@ export function SidebarNavContent({ onLinkClick }: SidebarNavContentProps) {
     <div className="flex flex-col h-full">
       <div className="mb-8 p-4 border-b">
         {' '}
-        {/* ヘッダー部分を少し調整 */}
         <Link to="/" className="flex items-center gap-2" onClick={onLinkClick}>
           <CalendarDays className="h-8 w-8 text-primary" />{' '}
           <h1 className="text-xl font-bold text-primary">はるかぜ</h1>
@@ -43,7 +38,6 @@ export function SidebarNavContent({ onLinkClick }: SidebarNavContentProps) {
       </div>
       <nav className="flex flex-col gap-1 px-4 py-2 flex-1">
         {' '}
-        {/* gapとpaddingを微調整 */}
         {navItems.map((item) => (
           <Button
             key={item.label}

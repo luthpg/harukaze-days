@@ -2,12 +2,9 @@ import type { DateRecord } from '@/types';
 import { differenceInDays, isValid, parseISO } from 'date-fns'; // isValid を追加
 import { atom } from 'jotai';
 
-// 既存の atom 定義
 export const recordedDatesAtom = atom<DateRecord[]>([]);
 export const selectedDateAtom = atom<Date | undefined>(new Date());
 export const editingDateRecordAtom = atom<DateRecord | null>(null);
-
-// 新しく追加する派生 atom
 export const averageIntervalDaysAtom = atom<number | null>((get) => {
   const datesRecords = get(recordedDatesAtom);
 

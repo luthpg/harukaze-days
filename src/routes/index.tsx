@@ -28,7 +28,6 @@ function App() {
           <p className="text-xl text-muted-foreground mb-8">
             大切な日付を簡単に記録し、カレンダーで一目で確認
           </p>
-          {/* ここにイメージ画像など <img src="/path/to/image.svg" alt="App hero" className="w-64 h-64 mx-auto mb-8" /> */}
         </header>
         <main className="text-center">
           <Link to="/login">

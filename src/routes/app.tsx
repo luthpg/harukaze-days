@@ -14,9 +14,6 @@ import { Menu } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export const Route = createFileRoute('/app')({
-  // beforeLoad: ({ context, location }) => {
-  //   // ... 既存の認証チェック
-  // },
   component: AppPageLayout,
 });
 
@@ -114,7 +111,6 @@ function AppHeader({ onMenuClick }: AppHeaderProps) {
           to="/app"
           className="hidden md:flex items-center gap-2 text-lg font-semibold"
         >
-          {/* <CalendarDays className="h-6 w-6" /> */}
           <span>マイカレンダー</span>
         </Link>
       </div>
