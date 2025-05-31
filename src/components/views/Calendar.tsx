@@ -89,7 +89,7 @@ export default function CalendarView() {
           toast.success('成功', {
             description: `${format(dateOnly, 'yyyy/MM/dd')} を記録しました。`,
           });
-          setSelectedCalDate(new Date());
+          setSelectedCalDate(undefined);
         } catch (error) {
           toast.error('エラー', {
             description: (error as Error).message,
@@ -113,7 +113,7 @@ export default function CalendarView() {
         toast.success('成功', { description: '備考を更新しました。' });
         setIsEditModalOpen(false);
         setEditingRecord(null);
-        setSelectedCalDate(new Date());
+        setSelectedCalDate(undefined);
       } catch (error) {
         toast.error('エラー', {
           description: (error as Error).message,
@@ -143,7 +143,7 @@ export default function CalendarView() {
           setIsEditModalOpen(false);
           setEditingRecord(null);
         }
-        setSelectedCalDate(new Date());
+        setSelectedCalDate(undefined);
       } catch (error) {
         toast.error('エラー', {
           description: (error as Error).message,
@@ -182,7 +182,7 @@ export default function CalendarView() {
                 'bg-primary/10 text-primary font-semibold relative rounded-md',
               selected:
                 'bg-primary text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-md', // Shadcnデフォルトのselectedスタイルと競合しないように注意
-              today: 'text-accent-foreground bg-accent/50 rounded-md', // 今日の日付のスタイル（任意）
+              today: 'border-2 border-primary text-primary font-bold',
             }}
             components={{
               DayContent: (props) => {
