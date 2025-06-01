@@ -162,8 +162,8 @@ export default function CalendarView() {
   );
 
   return (
-    <div className="flex flex-col md:flex-row gap-8">
-      <Card className="md:w-auto mx-auto shadow-lg">
+    <div className="flex flex-col md:flex-row gap-8 items-start">
+      <Card className="md:w-auto mx-auto shadow-lg self-start">
         <CardContent className="p-2 md:p-4">
           <Calendar
             mode="single"
@@ -223,7 +223,7 @@ export default function CalendarView() {
         </CardContent>
       </Card>
 
-      <div className="flex-1">
+      <div className="flex-1 w-full">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">記録済みの日付</h2>
           {/* 平均間隔の表示 */}
